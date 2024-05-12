@@ -1,0 +1,71 @@
+/* CSS cho toàn bộ khung chứa slider */
+.slider-container {
+  position: relative;
+  width: 100%; /* Chiều rộng toàn bộ container */
+  height: 450px; /* Chiều cao của slider */
+  overflow: hidden; /* Ẩn những phần nội dung không nằm trong khuôn khổ */
+}
+
+/* CSS cho từng hình ảnh trong slider */
+.slider-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Đảm bảo hình ảnh phủ đầy khung mà không bị méo */
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 0.5s ease; /* Chuyển đổi mượt mà giữa các slide */
+}
+
+/* CSS cho nút điều hướng */
+.navigation-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5); /* Màu nền nửa trong suốt cho nút */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation-button.left {
+  left: 10px;
+}
+
+.navigation-button.right {
+  right: 10px;
+}
+
+/* CSS cho các biểu tượng bên trong nút */
+.navigation-button svg {
+  width: 20px;
+  height: 20px;
+  fill: white; /* Màu của biểu tượng */
+}
+
+/* CSS cho lớp phủ */
+.slider-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Lớp phủ màu tối */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CSS cho text hoặc nút bên trong lớp phủ */
+.overlay-content {
+  color: white;
+  font-size: 24px;
+  padding: 10px 20px;
+  border: 2px solid white;
+  border-radius: 10px;
+}
