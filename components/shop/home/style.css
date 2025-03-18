@@ -23,7 +23,7 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  background: rgba(0, 0, 0, 0.5); /* Màu nền nửa trong suốt cho nút */
+  background: rgba(0, 0, 0, 0.459); /* Màu nền nửa trong suốt cho nút */
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -35,19 +35,22 @@
 
 .navigation-button.left {
   left: 10px;
+  opacity: 0.5; /* Mờ mặc định */
+  transition: opacity 0.3s ease-in-out;
 }
 
 .navigation-button.right {
   right: 10px;
+  opacity: 0.5; /* Mờ mặc định */
+  transition: opacity 0.3s ease-in-out;
 }
 
 /* CSS cho các biểu tượng bên trong nút */
 .navigation-button svg {
   width: 20px;
   height: 20px;
-  fill: white; /* Màu của biểu tượng */
+  fill: rgb(247, 243, 243); /* Màu của biểu tượng */
 }
-
 /* CSS cho lớp phủ */
 .slider-overlay {
   position: absolute;
@@ -59,13 +62,4 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/* CSS cho text hoặc nút bên trong lớp phủ */
-.overlay-content {
-  color: white;
-  font-size: 24px;
-  padding: 10px 20px;
-  border: 2px solid white;
-  border-radius: 10px;
 }

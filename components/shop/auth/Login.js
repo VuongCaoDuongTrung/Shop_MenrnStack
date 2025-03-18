@@ -1,6 +1,8 @@
 import React, { Fragment, useState, useContext } from "react";
 import { loginReq } from "./fetchApi";
 import { LayoutContext } from "../index";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import CSS
 
 const Login = (props) => {
   const { data: layoutData, dispatch: layoutDispatch } = useContext(
@@ -10,11 +12,34 @@ const Login = (props) => {
   const [data, setData] = useState({
     email: "",
     password: "",
+    showPassword: false,
     error: false,
-    loading: true,
+    loading: false,
   });
 
-  const alert = (msg) => <div className="text-xs text-red-500">{msg}</div>;
+  const notifySuccess = () => {
+    toast.success("✅ Bạn đã đăng nhập thành công!", {
+      position: "top-right",
+      autoClose: 3000, // 3 giây
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "colored",
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(`❌ ${message}`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "colored",
+    });
+  };
 
   const formSubmit = async () => {
     setData({ ...data, loading: true });
@@ -23,6 +48,7 @@ const Login = (props) => {
         email: data.email,
         password: data.password,
       });
+
       if (responseData.error) {
         setData({
           ...data,
@@ -30,10 +56,14 @@ const Login = (props) => {
           error: responseData.error,
           password: "",
         });
+        notifyError(responseData.error);
       } else if (responseData.token) {
         setData({ email: "", password: "", loading: false, error: false });
         localStorage.setItem("jwt", JSON.stringify(responseData));
-        window.location.href = "/";
+        notifySuccess();
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500); // Chờ 2 giây rồi chuyển trang
       }
     } catch (error) {
       console.log(error);
@@ -42,13 +72,12 @@ const Login = (props) => {
 
   return (
     <Fragment>
+      <ToastContainer /> {/* Thanh thông báo Toast */}
       <div className="text-center text-2xl mb-6">Login</div>
-      {layoutData.loginSignupError ? (
+      {layoutData.loginSignupError && (
         <div className="bg-red-200 py-2 px-4 rounded">
           Bạn cần đăng nhập để thanh toán. Chưa có tài khoản? Tạo mới.
         </div>
-      ) : (
-        ""
       )}
       <form className="space-y-4">
         <div className="flex flex-col">
@@ -64,49 +93,52 @@ const Login = (props) => {
             value={data.email}
             type="text"
             id="name"
-            className={`${
-              !data.error ? "" : "border-red-500"
-            } px-4 py-2 focus:outline-none border`}
+            className="px-4 py-2 border focus:outline-none"
           />
-          {!data.error ? "" : alert(data.error)}
         </div>
+
+        {/* Mật khẩu với nút hiển thị 👁️ */}
         <div className="flex flex-col">
           <label htmlFor="password">
             Mật khẩu<span className="text-sm text-gray-600 ml-1">*</span>
           </label>
-          <input
-            onChange={(e) => {
-              setData({ ...data, password: e.target.value, error: false });
-              layoutDispatch({ type: "loginSignupError", payload: false });
-            }}
-            value={data.password}
-            type="password"
-            id="password"
-            className={`${
-              !data.error ? "" : "border-red-500"
-            } px-4 py-2 focus:outline-none border`}
-          />
-          {!data.error ? "" : alert(data.error)}
+          <div className="relative">
+            <input
+              onChange={(e) => {
+                setData({ ...data, password: e.target.value, error: false });
+                layoutDispatch({ type: "loginSignupError", payload: false });
+              }}
+              value={data.password}
+              type={data.showPassword ? "text" : "password"} // 👁️ Toggle type
+              id="password"
+              className="px-4 py-2 border w-full pr-10 focus:outline-none"
+            />
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer "
+              onClick={() =>
+                setData({ ...data, showPassword: !data.showPassword })
+              }
+            >
+              {data.showPassword ? "🙈" : "👁️"}
+            </span>
+          </div>
         </div>
+
         <div className="flex flex-col space-y-2 md:flex-row md:justify-between md:items-center">
           <div>
-            <input
-              type="checkbox"
-              id="rememberMe"
-              className="px-4 py-2 focus:outline-none border mr-1"
-            />
+            <input type="checkbox" id="rememberMe" className="mr-1" />
             <label htmlFor="rememberMe">
               Ghi nhớ<span className="text-sm text-gray-600">*</span>
             </label>
           </div>
-          <a className="block text-gray-600" href="/">
-          Quên mật khẩu?
+          <a className="text-gray-600" href="/">
+            Quên mật khẩu?
           </a>
         </div>
+
         <div
-          onClick={(e) => formSubmit()}
-          style={{ background: "#303031" }}
-          className="font-medium px-4 py-2 text-white text-center cursor-pointer"
+          onClick={() => formSubmit()}
+          className="font-medium px-4 py-2 text-white text-center cursor-pointer bg-gray-800"
         >
           Đăng nhập
         </div>
